@@ -18,6 +18,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Clean output folders
+        shell: powershell
+        run: |
+          $folders = @('downloads', 'screenshots', 'playwright-report', 'test-results')
+          foreach ($folder in $folders) {
+            if (Test-Path $folder) {
+              Remove-Item "$folder\*" -Recurse -Force -ErrorAction SilentlyContinue
+            }
+            New-Item -ItemType Directory -Path $folder -Force | Out-Null
+          }
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
